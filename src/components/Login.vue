@@ -1,16 +1,27 @@
 <template>
 
   <div class="wrap container">
-    <div class="toptitle" >
+    <div class="toptitle">
      教务管理系统<br/><hr/>
     </div>
     <div class="row">
+      <!--资料下载-->
+      <div class="col-lg-6 visible-lg col-md-12 visible-md col-sm-12">
+        <div style="background-color:rgba(255,255,255,0.5);width: 80%;margin-left: 10%;border-radius: 20px;box-shadow: 2px 2px 2px #eee">
+          <div style="text-align: center;font-size: 24px;color: #fff;font-family: 楷体"><p style="height: 2px">&nbsp;</p>校园资讯
+            <span class="el-icon-s-opportunity" style="color: yellow"></span></div>
+          <hr/>
+          <br/>
+          <br/>
+          <br/>
+        </div>
+      </div>
       <!--登陆框-->
-      <div class="col-lg-6 col-md-6 col-sm-6">
+      <div class="col-lg-6 col-md-12  col-sm-12 ">
         <div style="width: 80%;margin-left: 10%">
           <el-tabs type="border-card" style="text-align: center" >
             <el-tab-pane>
-              <span slot="label"><i class="el-icon-s-custom" @click="cut"></i> 教师登陆</span>
+              <span slot="label" ><i class="el-icon-s-custom"></i> 教师登陆</span>
               <!--教师登陆-->
               <form>
                 <br/>
@@ -21,17 +32,24 @@
                 <div class="input_box">
                   <span >密　码：</span>
                   <el-input placeholder="请输入密码" prefix-icon="el-icon-unlock" v-model="teacherpass" show-password></el-input></div>
-                  <CHECK/>
+                  <div style="width: 100%">
+                  </div>
+                <br/>
+
+                 <Check/>
+
+                <br/>
                 <el-checkbox v-model="teacherremember">记住密码</el-checkbox>
                 忘记密码
                 <br/>
-                <el-button type="primary" plain @click="teacherlogin">登陆</el-button>
+                <br/>
+                <el-button type="primary" plain @click="teacherlogin" v-loading.fullscreen.lock="fullscreenLoading">登陆</el-button>
                 <el-button type="info" plain @click="reset">重置</el-button>
               </form>
 
             </el-tab-pane>
             <!--==============================================================================-->
-            <el-tab-pane label="学生登陆" @click="cut" >
+            <el-tab-pane @click="cut" label="学生登陆"  >
               <form>
                 <br/>
                 <div class="input_box">
@@ -41,11 +59,11 @@
                 <div class="input_box">
                   <span >密　码：</span>
                   <el-input placeholder="请输入密码" prefix-icon="el-icon-unlock" v-model="studentname" show-password></el-input></div>
-                <CHECK/>
+
                 <el-checkbox v-model="studentremember">记住密码</el-checkbox>
                 忘记密码
                 <br/>
-                <el-button type="primary" plain @click="teacherlogin">登陆</el-button>
+                <el-button type="primary" plain @click="studentlogin" v-loading.fullscreen.lock="fullscreenLoading">登陆</el-button>
                 <el-button type="info" plain @click="reset">重置</el-button>
               </form>
             </el-tab-pane>
@@ -53,9 +71,7 @@
 
         </div>
       </div>
-      <div class="col-lg-6 col-md-6 col-sm-6">
-        <div>123</div>
-      </div>
+
       <ul>
         <li></li>
         <li></li>
@@ -79,37 +95,82 @@
         <li></li>
       </ul>
     </div>
+    <!---->
+    <div style="position:absolute; bottom:0;text-align: center;font-size: 12px;color: #fff;width: 100%">
+    <hr/>
+      学校地址：江西省南昌市南昌大学&nbsp;&nbsp;邮编：330041&nbsp;&nbsp;电话：0791-83792888<br/>
+      CopyRight&copy;2020 Ahead&nbsp;&nbsp;赣备98234354669
+    </div>
   </div>
 </template>
 
 <script>
-  import check from "./check"
+ import Check from "./Check.vue"
   export default {
+    name: 'login',
     components:{
-      CHECK:check
+      Check
     },
     data(){
       return{
-        teachername:"",
-        teacherpass:"",
-        teacherremember:"",
-        studentname:"",
-        studentpass:"",
-        studentremember:""
+
+        fullscreenLoading: false,
+        teachername:"",/*老师登陆用户名*/
+        teacherpass:"",/*老师登陆密码*/
+        teacherremember:"",/*老师登陆记住密码*/
+        studentname:"",/*学生登陆用户名*/
+        studentpass:"",/*学生登陆密码*/
+        studentremember:""/*学生登陆记住密码*/
       }
     },
     methods:{
-      cut(){
-        alert("123")
-      },
+
+      cut(){alert("123")},
       reset(){
 
       },
-      teacherlogin(){
-        alert("login")
-        this.$ajax.post("test").then(success=>{alert(success.data)}).catch(error=>{})
-        /*alert
-        this:$ajax.post("test").then(success=>{alert(success.data)}).catch(error=>{})*/
+     /* teacherlogin(){
+        const teachername=this.teachername
+        const teacherpass=this.teacherpass
+        this.$store.dispatch('teacherlogin',{teachername,teacherpass})
+      },*/
+     studentlogin(){
+       alert(123)
+     },
+     teacherlogin(){
+        if(this.teachername=="") {
+          this.$message({
+            message:'用户名不能为空',
+            type:'error',
+            duration:1500,
+            center:true
+          });
+        }else
+        if(this.teacherpass==""){
+          this.$message({
+            message:'密码不能为空',
+            type:'error',
+            duration:1500,
+            center:true
+          });
+        }else{
+          const loading = this.$loading({
+            lock: true,
+            text: '正在登陆',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
+          setTimeout(() => {
+            loading.close();
+          }, 1500);
+          setTimeout(()=>{
+           this.$ajax.post("login",this.$qs.stringify({type:1,name:this.teachername,pass:this.teacherpass})).then(success=>{
+              alert(success.data)
+           }).catch(error=>{
+
+            })
+          },1600)
+        }
       }
     }
   }

@@ -808,7 +808,7 @@ function Sizzle( selector, context, results, seed ) {
 		}
 
 		// QSA path
-		if ( support.qsa && (!rbuggyQSA || !rbuggyQSA.test( selector )) ) {
+		if ( support.qsa && (!rbuggyQSA || !rbuggyQSA.Check( selector )) ) {
 			nid = old = expando;
 			newContext = context;
 			newSelector = nodeType !== 1 && selector;
@@ -1406,8 +1406,8 @@ Sizzle.matchesSelector = function( elem, expr ) {
 	expr = expr.replace( rattributeQuotes, "='$1']" );
 
 	if ( support.matchesSelector && documentIsHTML &&
-		( !rbuggyMatches || !rbuggyMatches.test( expr ) ) &&
-		( !rbuggyQSA     || !rbuggyQSA.test( expr ) ) ) {
+		( !rbuggyMatches || !rbuggyMatches.Check( expr ) ) &&
+		( !rbuggyQSA     || !rbuggyQSA.Check( expr ) ) ) {
 
 		try {
 			var ret = matches.call( elem, expr );
@@ -7679,7 +7679,7 @@ function ajaxHandleResponses( s, jqXHR, responses ) {
 	// Check if we're dealing with a known content-type
 	if ( ct ) {
 		for ( type in contents ) {
-			if ( contents[ type ] && contents[ type ].test( ct ) ) {
+			if ( contents[ type ] && contents[ type ].Check( ct ) ) {
 				dataTypes.unshift( type );
 				break;
 			}

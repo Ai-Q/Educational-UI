@@ -7,13 +7,26 @@ import App from './App'
 import router from './router'
 import store from './store'
 import axios from 'axios'
+import iview from 'iview'
+/*import Verify from "vue-drag-verify"*/
+import qs from "qs"
 axios.defaults.baseURL='http://127.0.0.1:8888/Educationl_war/'
+axios.defaults.headers = {
+  "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+}
 Vue.prototype.$ajax=axios
 Vue.use(ElementUI)
+Vue.prototype.$qs=qs
+Vue.use(iview)
+
 /* eslint-disable no-new */
-new Vue({
+var vm=new Vue({
   el: '#app',
+  name:'app',
   render:h=>h(App),
   router,
-  store
+  store,
+ /* components:{
+    dragVerify
+  }*/
 })
