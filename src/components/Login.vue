@@ -173,6 +173,8 @@
                     duration:1500,
                     center:true
                   })
+                }else{
+                  this.$router.push({path:'/test'})
                 }
               }).catch(error=>{
 
