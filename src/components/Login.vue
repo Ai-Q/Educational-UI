@@ -53,12 +53,12 @@
               <form>
                 <br/>
                 <div class="input_box">
-                  <span >用户名：</span><el-input placeholder="请输入用户名" v-model="studentname"  prefix-icon="el-icon-user-solid"  clearable>
+                  <span >用户名：</span><el-input placeholder="请输入学号" v-model="studentname"  prefix-icon="el-icon-user-solid"  clearable>
                 </el-input></div>
                 <br/>
                 <div class="input_box">
                   <span >密　码：</span>
-                  <el-input placeholder="请输入密码" prefix-icon="el-icon-unlock" v-model="studentname" show-password></el-input></div>
+                  <el-input placeholder="请输入密码" prefix-icon="el-icon-unlock" v-model="studentpass" show-password></el-input></div>
 
                 <el-checkbox v-model="studentremember">记住密码</el-checkbox>
                 忘记密码
@@ -137,6 +137,50 @@
      studentlogin(){
        alert(123)
      },
+      studentlogin(){
+          if(this.studentname=="") {
+            this.$message({
+              message:'用户名不能为空',
+              type:'error',
+              duration:1500,
+              center:true
+            });
+          }else
+          if(this.studentpass==""){
+            this.$message({
+              message:'密码不能为空',
+              type:'error',
+              duration:1500,
+              center:true
+            });
+          }else{
+            const loading = this.$loading({
+              lock: true,
+              text: '正在登陆',
+              spinner: 'el-icon-loading',
+              background: 'rgba(0, 0, 0, 0.7)'
+            });
+            setTimeout(() => {
+              loading.close();
+            }, 1500);
+            setTimeout(()=>{
+              this.$ajax.post("login",this.$qs.stringify({type:2,name:this.studentname,pass:this.studentpass})).then(success=>{
+                alert(success.data.studentName)
+                if(success.data==="loginerror"){
+                  this.$message({
+                    message:'登陆失败，用户名或密码错误',
+                    type:'error',
+                    duration:1500,
+                    center:true
+                  })
+                }
+              }).catch(error=>{
+
+              })
+            },1500)
+          }
+
+      },
      teacherlogin(){
         if(this.teachername=="") {
           this.$message({
@@ -165,11 +209,19 @@
           }, 1500);
           setTimeout(()=>{
            this.$ajax.post("login",this.$qs.stringify({type:1,name:this.teachername,pass:this.teacherpass})).then(success=>{
-              alert(success.data)
+            alert(success.data)
+            if(success.data==="loginerror"){
+              this.$message({
+                message:'登陆失败，用户名或密码错误',
+                type:'error',
+                duration:1500,
+                center:true
+              })
+            }
            }).catch(error=>{
 
             })
-          },1600)
+          },1500)
         }
       }
     }
