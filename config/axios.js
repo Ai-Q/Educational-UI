@@ -46,7 +46,6 @@ axios.interceptors.response.use((response)=>{
       response.data=a
     }
     console.log(response.data)
-   /* response.data=JSON.parse(response.data)*/
 
   //想做什么
   return response;
