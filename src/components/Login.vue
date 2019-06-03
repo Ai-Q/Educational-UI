@@ -127,6 +127,13 @@
   export default {
     name: 'login',
     mounted(){
+      if(window.localStorage.getItem("teacherremember")=='true'||window.localStorage.getItem("studentremember")=='true'){
+        this.$ajax.get("loginToken").then(success=>{
+          window.sessionStorage.setItem("loginToken",success.data)
+        }).catch(error=>{
+
+        })
+      }
       /*this.$store.dispatch('noticeList')*/
         this.$ajax.post("noticeInfo/noticeList").then(success=>{
           const data=[];
@@ -233,6 +240,7 @@
         if(this.studentpass!=""){
         /*学生*/
           if(this.studentremember==true) {
+            this.$ajax.post("saveLoginToken").then().catch()
             window.localStorage.setItem("studentname",this.studentname)
             window.localStorage.setItem("studentpass",this.studentpass)
             window.localStorage.setItem("studentremember", "true")
@@ -312,10 +320,12 @@
                     type:'error',
                     duration:1500,
                     center:true
-                  },this,studentpass="",this.studentname="",
+                  }),
+                    this.studentpass="",
+                    this.studentname="",
                     window.localStorage.removeItem("studenetname"),
                     window.localStorage.removeItem("studentpass"),
-                    window.localStorage.removeItem("studentremember")),
+                    window.localStorage.removeItem("studentremember"),
                     this.studentremember=false
                 }else{
                   this.$router.push({path:'/student'})
