@@ -11,7 +11,13 @@ import iview from 'iview'
 /*import Verify from "vue-drag-verify"*/
 import qs from "qs"
 import "../config/axios"
+import bootstrap from '../static/vendor/bootstrap/js/bootstrap.min.js'
+import popper from '../static/vendor/popper.js/popper.min.js'
+import front from '../static/js/front.js'
 
+Vue.prototype.bootstrap=bootstrap
+Vue.prototype.popper=popper
+Vue.prototype.front=front
 Vue.prototype.$ajax=axios
 Vue.use(ElementUI)
 Vue.prototype.$qs=qs

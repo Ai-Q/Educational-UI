@@ -1,14 +1,13 @@
 import axios from "axios"
 import Utis from "../static/js/utils"
 import Element from "element-ui"
-axios.defaults.baseURL="http://127.0.0.1:8888/Educationl_war/"
+axios.defaults.baseURL="http://127.0.0.1:8888/Educational_war/"
 axios.defaults.headers = {
   "Content-Type": "application/x-www-form-urlencoded"
 }
 
 //添加请求拦截器
 axios.interceptors.request.use((config)=> {
-
   console.log("请求="+config.url);
   if(config.url=="loginToken"){
     console.log("utl="+sessionStorage.getItem("loginToken"));
@@ -17,21 +16,25 @@ axios.interceptors.request.use((config)=> {
   }else if(config.url=="noticeInfo/noticeList"){
     console.log("资讯放行")
   }else{
-    config.headers={
-      'token':window.sessionStorage.getItem("token"),
-
+    if (config.data!=undefined||config.data!=null||config.data!=''){
+      let paramStr = config.data.split("&").sort();
+      let newParamStr='';
+      for(let i=0;i<paramStr.length;i++){
+        newParamStr+=paramStr[i];
+      }
+      const oldsign=Utis.setMD5(newParamStr,window.localStorage.getItem("Access-Token"));
+      const sign=oldsign.toUpperCase();
+       config.headers={
+      'Access-Token':Utis.encrypt(window.sessionStorage.getItem("Access-Token")),
+         'sign':sign
+     }
+    }else{
+      config.headers={
+        'Access-Token':Utis.encrypt(window.sessionStorage.getItem("Access-Token"))
+      }
     }
   }
 
-  //请求时候带上token
-  /*if (window.sessionStorage.getItem("token")) {
-    console.log(config.data);
-    const a = config.data;
-    const b = a.split('&');
-    const result = b[0].split('=')[1];
-    console.log("=====data==="+result);
-    config.headers.authentication = window.sessionStorage.getItem("token");
-  }*/
   return config;
 },(error)=>{
   return promise.reject(error);
@@ -42,7 +45,6 @@ axios.interceptors.response.use((response)=>{
   response.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
     const a=Utis.decrypt(response.data);
     if(a.indexOf("loginToken")!= -1) {
-
       response.data=a
     }
     console.log(response.data)
