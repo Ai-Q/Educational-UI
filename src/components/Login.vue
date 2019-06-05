@@ -328,6 +328,7 @@
                     window.localStorage.removeItem("studentremember"),
                     this.studentremember=false
                 }else{
+                  window.localStorage.setItem("Access-Token",Utis.decrypt(success.data));
                   this.$router.push({path:'/student'})
                 }
               }).catch(error=>{
@@ -395,7 +396,8 @@
                 window.localStorage.removeItem("teacherremember"),
                 this.teacherremember=false
             }else{
-               this.$router.push({path:'/test'})
+               window.localStorage.setItem("Access-Token",Utis.decrypt(success.data));
+               this.$router.push({path:'/teacher'})
              }
            }).catch(error=>{
 
@@ -408,6 +410,7 @@
 </script>
 
 <style>
+
   a:hover{text-decoration:underline;}
   dd{
   line-height: 36px;
